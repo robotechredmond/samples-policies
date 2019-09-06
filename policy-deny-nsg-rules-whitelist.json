@@ -76,6 +76,10 @@
                                         "AzureLoadBalancer"
                                     ]
                                 }
+                            },
+                            {
+                                "value": "[empty(field('Microsoft.Network/networkSecurityGroups/securityRules/sourceApplicationSecurityGroups'))]",
+                                "equals": "true"
                             }
                         ]
                     }
