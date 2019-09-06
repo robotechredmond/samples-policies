@@ -1,0 +1,68 @@
+{
+    "properties": {
+        "displayName": "Denies NSG with rule properties that don't match whitelist",
+        "description": "Denies the creation of network security groups with rule properties that don't match whitelist",
+        "mode": "All",
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Network/networkSecurityGroups"
+                    },
+                    {
+                        "anyOf": [
+                            {
+                                "not": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].destinationPortRange",
+                                    "in": [
+                                        "1433",
+                                        "11000-11999",
+                                        "9000",
+                                        "9003",
+                                        "1438",
+                                        "1440",
+                                        "1452",
+                                        "80",
+                                        "443",
+                                        "454",
+                                        "455",
+                                        "16001",
+                                        "65503-65534",
+                                        "6379",
+                                        "6380",
+                                        "13000-13999",
+                                        "15000-15999",
+                                        "3443",
+                                        "29876",
+                                        "29877",
+                                        "19080"
+                                    ]
+                                }
+                            },
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefix",
+                                "in": [
+                                    "*",
+                                    "Internet"
+                                ]
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules[*].sourceAddressPrefixes[*]",
+                                    "notIn": [
+                                        "*",
+                                        "Internet"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deny"
+            }
+        }
+    }
+}

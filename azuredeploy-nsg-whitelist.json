@@ -1,0 +1,270 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namePrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique name prefix to use for beginning of NSG resource name"
+            },
+            "defaultValue": "project01"
+        },
+        "clientAddressPrefix": {
+            "type": "string",
+            "metadata": {
+                "description": "IP address CIDR block for inbound access from client devices"
+            },
+            "defaultValue": "10.0.1.0/24"
+        }
+    },
+    "variables": {
+        "nsgName": "[concat(parameters('namePrefix'),'-nsg')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "name": "[variables('nsgName')]",
+            "apiVersion": "2019-06-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [],
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "http-client-access-in-1",
+                        "properties": {
+                            "priority": 100,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "[parameters('clientAddressPrefix')]",
+                            "destinationPortRange": "80",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "https-client-access-in-1",
+                        "properties": {
+                            "priority": 110,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "[parameters('clientAddressPrefix')]",
+                            "destinationPortRange": "443",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-client-access-in-1",
+                        "properties": {
+                            "priority": 200,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "[parameters('clientAddressPrefix')]",
+                            "destinationPortRange": "1433",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-client-access-in-2",
+                        "properties": {
+                            "priority": 210,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "[parameters('clientAddressPrefix')]",
+                            "destinationPortRange": "11000-11999",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-mi-mgmt-in-1",
+                        "properties": {
+                            "priority": 220,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "9000",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-mi-mgmt-in-2",
+                        "properties": {
+                            "priority": 230,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "9003",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-mi-mgmt-in-3",
+                        "properties": {
+                            "priority": 240,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "1438",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-mi-mgmt-in-4",
+                        "properties": {
+                            "priority": 250,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "1440",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sql-mi-mgmt-in-5",
+                        "properties": {
+                            "priority": 260,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "1452",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "ase-mgmt-in-1",
+                        "properties": {
+                            "priority": 300,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AppServiceManagement",
+                            "destinationPortRange": "454",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "ase-mgmt-in-2",
+                        "properties": {
+                            "priority": 310,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AppServiceManagement",
+                            "destinationPortRange": "455",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "ase-mgmt-in-3",
+                        "properties": {
+                            "priority": 320,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AppServiceManagement",
+                            "destinationPortRange": "16001",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "app-gw-mgmt-in-1",
+                        "properties": {
+                            "priority": 400,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "GatewayManager",
+                            "destinationPortRange": "65503-65534",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "hdi-mgmt-in-1",
+                        "properties": {
+                            "priority": 500,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "443",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "api-mgmt-in-1",
+                        "properties": {
+                            "priority": 600,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "3443",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "batch-mgmt-in-1",
+                        "properties": {
+                            "priority": 700,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "BatchNodeManagement",
+                            "destinationPortRange": "29876",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "batch-mgmt-in-2",
+                        "properties": {
+                            "priority": 710,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "BatchNodeManagement",
+                            "destinationPortRange": "29877",
+                            "destinationAddressPrefix": "*"
+                        }
+                    },
+                    {
+                        "name": "sf-mgmt-in-1",
+                        "properties": {
+                            "priority": 800,
+                            "direction": "Inbound",
+                            "access": "Allow",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "sourceAddressPrefix": "AzureCloud",
+                            "destinationPortRange": "19080",
+                            "destinationAddressPrefix": "*"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

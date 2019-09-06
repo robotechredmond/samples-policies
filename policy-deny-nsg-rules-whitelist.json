@@ -1,0 +1,89 @@
+{
+    "properties": {
+        "displayName": "Denies NSG rule changes that are not whitelisted",
+        "description": "Denies the creation of network security group rules that are not whitelisted",
+        "mode": "All",
+        "policyRule": {
+            "if": {
+                "allOf": [
+                    {
+                        "field": "type",
+                        "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
+                    },
+                    {
+                        "allOf": [
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/access",
+                                "equals": "Allow"
+                            },
+                            {
+                                "field": "Microsoft.Network/networkSecurityGroups/securityRules/direction",
+                                "equals": "Inbound"
+                            },
+                            {
+                                "anyOf": [
+                                    {
+                                        "not": {
+                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+                                            "in": [
+                                                "1433",
+                                                "11000-11999",
+                                                "9000",
+                                                "9003",
+                                                "1438",
+                                                "1440",
+                                                "1452",
+                                                "80",
+                                                "443",
+                                                "454",
+                                                "455",
+                                                "16001",
+                                                "65503-65534",
+                                                "6379",
+                                                "6380",
+                                                "13000-13999",
+                                                "15000-15999",
+                                                "3443",
+                                                "29876",
+                                                "29877",
+                                                "19080"
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                        "in": [
+                                            "*",
+                                            "Internet"
+                                        ]
+                                    },
+                                    {
+                                        "not": {
+                                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                                            "notIn": [
+                                                "*",
+                                                "Internet"
+                                            ]
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                                    "in": [
+                                        "VirtualNetwork",
+                                        "AzureLoadBalancer"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "then": {
+                "effect": "deny"
+            }
+        }
+    }
+}
